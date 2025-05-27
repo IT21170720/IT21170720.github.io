@@ -1,0 +1,2042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DATASHIELDX - Next-Generation Data Loss Prevention</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #E91E63;
+            --primary-dark: #C2185B;
+            --secondary: #2C3E50;
+            --accent: #00BCD4;
+            --success: #4CAF50;
+            --warning: #FF5722;
+            --bg-dark: #0F1419;
+            --bg-light: #1A1F2E;
+            --text-light: #E1E8ED;
+            --text-muted: #8899A6;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(15, 20, 25, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        nav.scrolled {
+            padding: 0.5rem 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            margin-left: -200px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            font-weight: 500;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(233, 30, 99, 0.5);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 0 2rem;
+            background: radial-gradient(ellipse at center, rgba(233, 30, 99, 0.1) 0%, transparent 70%);
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .grid-bg {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background-image: linear-gradient(rgba(233, 30, 99, 0.1) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(233, 30, 99, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: grid-move 20s linear infinite;
+            opacity: 0.3;
+        }
+
+        @keyframes grid-move {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            background: linear-gradient(135deg, var(--text-light) 0%, var(--primary) 50%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 200%;
+            animation: gradient-shift 3s ease infinite;
+        }
+
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            font-weight: 300;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-light);
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            border: 2px solid var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(233, 30, 99, 0.5);
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 5rem 2rem;
+            background: var(--bg-light);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            animation: scan 3s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .stat-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(233, 30, 99, 0.2);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 5rem 2rem;
+            background: var(--bg-dark);
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--text-light), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-header p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+        }
+
+        .features-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .feature-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            background: rgba(233, 30, 99, 0.05);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 30px rgba(233, 30, 99, 0.3);
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+
+        .feature-list {
+            margin-top: 1rem;
+            list-style: none;
+        }
+
+        .feature-list li {
+            color: var(--text-muted);
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .feature-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        /* Tech Stack Section */
+        .tech-stack {
+            padding: 5rem 0rem;
+            background: var(--bg-light);
+            position: relative;
+        }
+
+        .tech-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .tech-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tech-item::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(233, 30, 99, 0.1);
+            transform: translate(-50%, -50%);
+            transition: all 0.5s ease;
+        }
+
+        .tech-item:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        .tech-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .tech-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .tech-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .tech-description {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Pricing Section */
+        .pricing {
+            padding: 5rem 0rem;
+            background: var(--bg-dark);
+            position: relative;
+            overflow: hidden;
+            margin-top: 80px;
+            width: 100%;
+        }
+
+        .pricing::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1px;
+            height: 100%;
+            /* background: linear-gradient(180deg, transparent, var(--primary), transparent); */
+            opacity: 0.3;
+        }
+
+        .pricing-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .pricing-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2.5rem;
+            position: relative;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            background: radial-gradient(circle, rgba(233, 30, 99, 0.1) 0%, transparent 50%);
+            transition: all 0.5s ease;
+            opacity: 0;
+        }
+
+        .pricing-card:hover::before {
+            opacity: 1;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 30px 60px rgba(233, 30, 99, 0.2);
+        }
+
+        .pricing-card.featured {
+            border-color: var(--primary);
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(233, 30, 99, 0.3);
+        }
+
+        .pricing-card.featured:hover {
+            transform: scale(1.05) translateY(-10px);
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .featured-badge {
+            background: var(--primary);
+            color: white;
+            animation: pulse-badge 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-badge {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .elite-badge {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: var(--bg-dark);
+        }
+
+        .pricing-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-light);
+        }
+
+        .pricing-price {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 1rem;
+        }
+
+        .currency {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-right: 0.25rem;
+        }
+
+        .amount {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--text-light);
+        }
+
+        .period {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-left: 0.5rem;
+        }
+
+        .pricing-users {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .pricing-features li {
+            padding: 0.75rem 0;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+        }
+
+        .pricing-features li.disabled {
+            color: var(--text-muted);
+            opacity: 0.5;
+        }
+
+        .pricing-features li strong {
+            color: var(--primary);
+        }
+
+        .pricing-cta {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            text-align: center;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .pricing-cta:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(233, 30, 99, 0.3);
+        }
+
+        .featured-cta {
+            background: var(--primary);
+            color: white;
+        }
+
+        .featured-cta:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Comparison Table */
+        .pricing-comparison {
+            max-width: 1200px;
+            margin: 4rem auto 0;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            padding: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .pricing-comparison h3 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: var(--text-light);
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .comparison-table th {
+            background: rgba(233, 30, 99, 0.1);
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        .comparison-table td {
+            color: var(--text-muted);
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .featured-col {
+            background: rgba(233, 30, 99, 0.05);
+            color: var(--text-light) !important;
+            position: relative;
+        }
+
+        /* Pricing FAQ */
+        .pricing-faq {
+            max-width: 1200px;
+            margin: 4rem auto 0;
+        }
+
+        .pricing-faq h3 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: var(--text-light);
+        }
+
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .faq-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            border-color: var(--primary);
+            background: rgba(233, 30, 99, 0.05);
+        }
+
+        .faq-item h4 {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .faq-item p {
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* Mobile Responsive for Pricing */
+        @media (max-width: 1024px) {
+            .pricing-container {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+            }
+
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+
+            .comparison-table {
+                font-size: 0.9rem;
+            }
+
+            .comparison-table th,
+            .comparison-table td {
+                padding: 0.5rem;
+            }
+        }
+
+        /* About Section */
+        .about-section {
+            padding: 5rem 2rem;
+            background: var(--bg-dark);
+        }
+
+        .about-section h3 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-light);
+        }
+
+        .mission-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .mission-content p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .mission-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .mission-stat {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .mission-stat:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            background: rgba(233, 30, 99, 0.05);
+        }
+
+        .mission-stat-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .mission-stat-label {
+            color: var(--text-muted);
+        }
+
+        /* Journey Section */
+        .journey-section {
+            padding: 5rem 2rem;
+            background: var(--bg-light);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .journey-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary), var(--accent));
+            opacity: 0.3;
+        }
+
+        .timeline-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .timeline-content {
+            width: 45%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(233, 30, 99, 0.2);
+        }
+
+        .timeline-date {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .timeline-title {
+            font-size: 1.5rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .timeline-description {
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 50%;
+            border: 4px solid var(--bg-light);
+            z-index: 1;
+        }
+
+        /* Team Section */
+        .team-section {
+            padding: 5rem 2rem;
+            background: var(--bg-dark);
+        }
+
+        .team-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 3rem;
+        }
+
+        .team-member {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-member::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(233, 30, 99, 0.1), rgba(0, 188, 212, 0.05));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .team-member:hover::before {
+            opacity: 1;
+        }
+
+        .team-member:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(233, 30, 99, 0.2);
+        }
+
+        .team-avatar {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            font-weight: 700;
+        }
+
+        .team-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .team-role {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .team-bio {
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* Markets Section */
+        .markets {
+            padding: 5rem 2rem;
+            background: var(--bg-dark);
+        }
+
+        .markets-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .market-card {
+            background: linear-gradient(135deg, rgba(233, 30, 99, 0.1), rgba(0, 188, 212, 0.05));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .market-card::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            transition: all 0.5s ease;
+        }
+
+        .market-card:hover::before {
+            top: -150%;
+            left: -150%;
+        }
+
+        .market-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 30px 60px rgba(233, 30, 99, 0.3);
+            border-color: var(--primary);
+        }
+
+        .market-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .market-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+        }
+
+        .market-compliance {
+            display: inline-block;
+            background: rgba(76, 175, 80, 0.2);
+            color: var(--success);
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 5rem 2rem;
+            background: linear-gradient(135deg, var(--bg-light), var(--bg-dark));
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(233, 30, 99, 0.1) 0%, transparent 50%);
+            transform: translate(-50%, -50%);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-content h2 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--text-light), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .cta-content p {
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-light);
+            padding: 3rem 2rem 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section ul li a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section ul li a:hover {
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .features-grid,
+            .tech-grid,
+            .markets-grid,
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-number {
+                font-size: 2.5rem;
+            }
+
+            .section-header h2 {
+                font-size: 2rem;
+            }
+
+            .timeline::before {
+                left: 30px;
+            }
+
+            .timeline-item {
+                flex-direction: column !important;
+                margin-left: 60px;
+            }
+
+            .timeline-content {
+                width: 100%;
+            }
+
+            .timeline-dot {
+                left: 30px;
+            }
+
+            .mission-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Loading Animation */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader-content {
+            text-align: center;
+        }
+
+        .loader-logo {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 2rem;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .loader-bar {
+            width: 200px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .loader-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 2px;
+            animation: load 1.5s ease-in-out infinite;
+        }
+
+        @keyframes load {
+            0% { width: 0; }
+            50% { width: 100%; }
+            100% { width: 0; }
+        }
+
+        .image_size {
+            --background-color: #FF5722;
+            margin: 0;
+            padding: 0;
+        }
+
+        .logo_img {
+            --background-color: #FF5722;
+            width: 50px;
+            height: 50px;
+            margin-top: 5px;
+            
+        }
+    </style>
+</head>
+<body>
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div class="loader-content">
+            <div class="loader-logo">DATASHIELDX</div>
+            <div class="loader-bar">
+                <div class="loader-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="image_size"><img class="logo_img" src="https://i.ibb.co/qY8v1tpP/Chat-GPT-Image-May-26-2025-11-36-27-PM.png" alt="img"></div>
+            <div class="logo">DATASHIELDX</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#technology">Technology</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#markets">Markets</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact" class="cta-button">Get Demo</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-bg">
+            <div class="grid-bg"></div>
+        </div>
+        <div class="hero-content fade-in">
+            <h1>Next-Generation Data Loss Prevention</h1>
+            <p class="hero-subtitle">AI-Powered Security with Homomorphic Encryption & Advanced Threat Detection</p>
+            <div class="hero-buttons">
+                <a href="#contact" class="cta-button">Schedule Demo</a>
+                <a href="#features" class="btn-secondary">Explore Features</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="stats-container">
+            <div class="stat-card fade-in">
+                <div class="stat-number">99.6%</div>
+                <div class="stat-label">Detection Accuracy</div>
+            </div>
+            <div class="stat-card fade-in">
+                <div class="stat-number">0%</div>
+                <div class="stat-label">False Positive Risk</div>
+            </div>
+            <div class="stat-card fade-in">
+                <div class="stat-number">80%</div>
+                <div class="stat-label">Alert Reduction</div>
+            </div>
+            <div class="stat-card fade-in">
+                <div class="stat-number"><1s</div>
+                <div class="stat-label">Response Time</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="section-header fade-in">
+            <h2>Comprehensive Security Suite</h2>
+            <p>Industry-leading protection with cutting-edge AI and encryption technologies</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card fade-in">
+                <div class="feature-icon">🛡️</div>
+                <h3>AI-Powered Phishing Detection</h3>
+                <p>Machine learning-based detection with 96.63% accuracy using advanced NLP and real-time URL analysis.</p>
+                <ul class="feature-list">
+                    <li>Logistic Regression with Count Vectorizer</li>
+                    <li>Automatic malicious site blocking</li>
+                    <li>S-UNIWARD & WOW steganography detection</li>
+                </ul>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">🔐</div>
+                <h3>Homomorphic Encryption</h3>
+                <p>Privacy-preserving data classification using Microsoft SEAL library for secure processing.</p>
+                <ul class="feature-list">
+                    <li>BFV encryption scheme</li>
+                    <li>Real-time PII detection (95.78% accuracy)</li>
+                    <li>Metadata tagging without data exposure</li>
+                </ul>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">🔍</div>
+                <h3>Steganography & OCR Engine</h3>
+                <p>Advanced image analysis detecting hidden data and extracting text with 99% accuracy.</p>
+                <ul class="feature-list">
+                    <li>CNN-based steganalysis</li>
+                    <li>Multi-format image support</li>
+                    <li>LSB detection capabilities</li>
+                </ul>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">📊</div>
+                <h3>Intelligent Risk Scoring</h3>
+                <p>ML-based user behavior analytics with dynamic risk assessment and smart prioritization.</p>
+                <ul class="feature-list">
+                    <li>Real-time activity monitoring</li>
+                    <li>Behavioral pattern analysis</li>
+                    <li>40-60% analyst workload reduction</li>
+                </ul>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">🔑</div>
+                <h3>Multi-Factor Authentication</h3>
+                <p>Advanced access control with Face ID recognition and automatic threat response.</p>
+                <ul class="feature-list">
+                    <li>Two-step authentication</li>
+                    <li>Failed login photo capture</li>
+                    <li>Seamless integration</li>
+                </ul>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon">⚡</div>
+                <h3>Real-Time Protection</h3>
+                <p>Sub-second response times with minimal performance impact on your infrastructure.</p>
+                <ul class="feature-list">
+                    <li>Instant threat detection</li>
+                    <li>Automated response actions</li>
+                    <li>Continuous monitoring</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Stack -->
+    <section class="tech-stack" id="technology">
+        <div class="section-header fade-in">
+            <h2>Powered by Advanced Technology</h2>
+            <p>Built with state-of-the-art AI models and encryption frameworks</p>
+        </div>
+        <div class="tech-grid">
+            <div class="tech-item fade-in">
+                <div class="tech-icon">🧠</div>
+                <div class="tech-name">ALBERT Neural Network</div>
+                <div class="tech-description">For PII detection and risk scoring</div>
+            </div>
+            <div class="tech-item fade-in">
+                <div class="tech-icon">🔒</div>
+                <div class="tech-name">Microsoft SEAL</div>
+                <div class="tech-description">Homomorphic encryption library</div>
+            </div>
+            <div class="tech-item fade-in">
+                <div class="tech-icon">🤖</div>
+                <div class="tech-name">Advanced CNN Models</div>
+                <div class="tech-description">For steganography detection</div>
+            </div>
+            <div class="tech-item fade-in">
+                <div class="tech-icon">📝</div>
+                <div class="tech-name">OCR Engine</div>
+                <div class="tech-description">99% accuracy text extraction</div>
+            </div>
+            <div class="tech-item fade-in">
+                <div class="tech-icon">🎯</div>
+                <div class="tech-name">Ensemble ML Models</div>
+                <div class="tech-description">Majority voting for accuracy</div>
+            </div>
+            <div class="tech-item fade-in">
+                <div class="tech-icon">🔄</div>
+                <div class="tech-name">Real-Time Processing</div>
+                <div class="tech-description">Sub-second response times</div>
+            </div>
+        </div>
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="section-header fade-in">
+            <h2>Flexible Pricing Plans</h2>
+            <p>Choose the perfect plan for your organization's security needs</p>
+        </div>
+        <div class="pricing-container">
+            <div class="pricing-card fade-in">
+                <div class="pricing-badge">STARTER</div>
+                <h3 class="pricing-title">Professional</h3>
+                <div class="pricing-price">
+                    <span class="currency">$</span>
+                    <span class="amount">499</span>
+                    <span class="period">/month</span>
+                </div>
+                <div class="pricing-users">Up to 100 users</div>
+                <ul class="pricing-features">
+                    <li>✓ AI-Powered Phishing Detection</li>
+                    <li>✓ Basic OCR Text Extraction</li>
+                    <li>✓ Real-time Email Scanning</li>
+                    <li>✓ User Activity Monitoring</li>
+                    <li>✓ 5GB Data Processing/month</li>
+                    <li>✓ Standard Support (Business Hours)</li>
+                    <li>✓ Cloud Deployment Only</li>
+                    <li>✓ Monthly Security Reports</li>
+                    <li class="disabled">✗ Homomorphic Encryption</li>
+                    <li class="disabled">✗ Advanced Steganography Detection</li>
+                </ul>
+                <a href="#" class="pricing-cta">Start Free Trial</a>
+            </div>
+
+            <div class="pricing-card featured fade-in">
+                <div class="pricing-badge featured-badge">MOST POPULAR</div>
+                <h3 class="pricing-title">Enterprise</h3>
+                <div class="pricing-price">
+                    <span class="currency">$</span>
+                    <span class="amount">1999</span>
+                    <span class="period">/month</span>
+                </div>
+                <div class="pricing-users">Up to 500 users</div>
+                <ul class="pricing-features">
+                    <li>✓ Everything in Professional</li>
+                    <li>✓ <strong>Homomorphic Encryption (BFV)</strong></li>
+                    <li>✓ <strong>Advanced Steganography Detection</strong></li>
+                    <li>✓ <strong>99% OCR Accuracy with PII Detection</strong></li>
+                    <li>✓ Intelligent Risk Scoring</li>
+                    <li>✓ 50GB Data Processing/month</li>
+                    <li>✓ Priority Support (24/7)</li>
+                    <li>✓ Cloud + On-Premises Options</li>
+                    <li>✓ API Access & Integrations</li>
+                    <li>✓ Custom Security Policies</li>
+                    <li>✓ Compliance Dashboard (GDPR, HIPAA)</li>
+                </ul>
+                <a href="#" class="pricing-cta featured-cta">Get Started</a>
+            </div>
+
+            <div class="pricing-card fade-in">
+                <div class="pricing-badge elite-badge">ELITE</div>
+                <h3 class="pricing-title">Enterprise Plus</h3>
+                <div class="pricing-price">
+                    <span class="currency">$</span>
+                    <span class="amount">Custom</span>
+                </div>
+                <div class="pricing-users">Unlimited users</div>
+                <ul class="pricing-features">
+                    <li>✓ Everything in Enterprise</li>
+                    <li>✓ <strong>Unlimited Data Processing</strong></li>
+                    <li>✓ <strong>Custom ML Model Training</strong></li>
+                    <li>✓ <strong>Multi-Factor Authentication Suite</strong></li>
+                    <li>✓ Advanced Behavioral Analytics</li>
+                    <li>✓ Dedicated Security Team</li>
+                    <li>✓ White-Glove Onboarding</li>
+                    <li>✓ Custom Deployment Options</li>
+                    <li>✓ SLA Guarantee (99.9% Uptime)</li>
+                    <li>✓ Quarterly Security Reviews</li>
+                    <li>✓ Custom Integrations</li>
+                </ul>
+                <a href="#" class="pricing-cta">Contact Sales</a>
+            </div>
+        </div>
+
+        <div class="pricing-comparison fade-in">
+            <h3>Detailed Feature Comparison</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Features</th>
+                        <th>Professional</th>
+                        <th class="featured-col">Enterprise</th>
+                        <th>Enterprise Plus</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Phishing Detection Accuracy</td>
+                        <td>90%</td>
+                        <td class="featured-col">96.63%</td>
+                        <td>99%+</td>
+                    </tr>
+                    <tr>
+                        <td>PII Detection Models</td>
+                        <td>Basic</td>
+                        <td class="featured-col">ALBERT (95.78%)</td>
+                        <td>Custom + ALBERT</td>
+                    </tr>
+                    <tr>
+                        <td>Encryption</td>
+                        <td>Standard</td>
+                        <td class="featured-col">Homomorphic (SEAL)</td>
+                        <td>Homomorphic + Custom</td>
+                    </tr>
+                    <tr>
+                        <td>Steganography Detection</td>
+                        <td>❌</td>
+                        <td class="featured-col">✅ S-UNIWARD, WOW</td>
+                        <td>✅ All Methods</td>
+                    </tr>
+                    <tr>
+                        <td>Response Time</td>
+                        <td>&lt; 5 seconds</td>
+                        <td class="featured-col">&lt; 1 second</td>
+                        <td>&lt; 500ms</td>
+                    </tr>
+                    <tr>
+                        <td>Data Retention</td>
+                        <td>30 days</td>
+                        <td class="featured-col">90 days</td>
+                        <td>Customizable</td>
+                    </tr>
+                    <tr>
+                        <td>Compliance Reports</td>
+                        <td>Monthly</td>
+                        <td class="featured-col">Weekly</td>
+                        <td>Real-time</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pricing-faq fade-in">
+            <h3>Frequently Asked Questions</h3>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <h4>Can I switch plans anytime?</h4>
+                    <p>Yes, you can upgrade or downgrade your plan at any time. Changes take effect at the next billing cycle.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>Is there a free trial?</h4>
+                    <p>We offer a 30-day free trial for Professional and Enterprise plans with full feature access.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>What deployment options are available?</h4>
+                    <p>Professional is cloud-only. Enterprise supports cloud, on-premises, and hybrid deployments.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>How is data usage calculated?</h4>
+                    <p>Data usage includes all scanned emails, files, and images processed through our AI models.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Target Markets -->
+    <section class="markets" id="markets">
+        <div class="section-header fade-in">
+            <h2>Trusted Across Industries</h2>
+            <p>Comprehensive compliance and protection for every sector</p>
+        </div>
+        <div class="markets-grid">
+            <div class="market-card fade-in">
+                <div class="market-icon">🏦</div>
+                <div class="market-title">Financial Services</div>
+                <p>Protect customer financial data and ensure regulatory compliance with advanced encryption and monitoring.</p>
+                <div class="market-compliance">GDPR & PCI-DSS Compliant</div>
+            </div>
+            <div class="market-card fade-in">
+                <div class="market-icon">🏥</div>
+                <div class="market-title">Healthcare</div>
+                <p>Safeguard patient records and medical information with privacy-preserving analytics.</p>
+                <div class="market-compliance">HIPAA Compliant</div>
+            </div>
+            <div class="market-card fade-in">
+                <div class="market-icon">⚖️</div>
+                <div class="market-title">Legal Firms</div>
+                <p>Protect attorney-client privilege and sensitive case information from unauthorized access.</p>
+                <div class="market-compliance">Confidentiality Protected</div>
+            </div>
+            <div class="market-card fade-in">
+                <div class="market-icon">🏛️</div>
+                <div class="market-title">Government Agencies</div>
+                <p>Secure classified information and prevent data breaches with military-grade protection.</p>
+                <div class="market-compliance">ISO 27001/27701</div>
+            </div>
+            <div class="market-card fade-in">
+                <div class="market-icon">💻</div>
+                <div class="market-title">Technology & Software</div>
+                <p>Protect intellectual property, source code, and trade secrets from industrial espionage and insider threats.</p>
+                <div class="market-compliance">SOC 2 Type II</div>
+            </div>
+            <div class="market-card fade-in">
+                <div class="market-icon">🎓</div>
+                <div class="market-title">Education Institutions</div>
+                <p>Secure student records, research data, and academic intellectual property with comprehensive data protection.</p>
+                <div class="market-compliance">FERPA Compliant</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-section" id="about">
+        <div class="section-header fade-in">
+            <h2>About DATASHIELDX</h2>
+            <p>Securing Tomorrow's Data Today</p>
+        </div>
+        
+        <!-- Mission -->
+        <div class="mission-container">
+            <div class="mission-content fade-in">
+                <h3>Our Mission</h3>
+                <p>At DATASHIELDX, we believe that data security shouldn't come at the cost of privacy or performance. Our mission is to provide organizations with the most advanced data loss prevention technology that protects sensitive information while preserving privacy through innovative encryption methods.</p>
+                <p>We're pioneering the use of homomorphic encryption in DLP systems, ensuring that your security teams can analyze and protect data without ever exposing its contents.</p>
+            </div>
+            <div class="mission-stats fade-in">
+                <div class="mission-stat">
+                    <div class="mission-stat-number">500K+</div>
+                    <div class="mission-stat-label">Data Breaches Prevented</div>
+                </div>
+                <div class="mission-stat">
+                    <div class="mission-stat-number">150+</div>
+                    <div class="mission-stat-label">Enterprise Clients</div>
+                </div>
+                <div class="mission-stat">
+                    <div class="mission-stat-number">99.9%</div>
+                    <div class="mission-stat-label">Uptime Guarantee</div>
+                </div>
+                <div class="mission-stat">
+                    <div class="mission-stat-number">24/7</div>
+                    <div class="mission-stat-label">Security Monitoring</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Journey Timeline -->
+    <section class="journey-section">
+        <div class="journey-container">
+            <div class="section-header fade-in">
+                <h2>Our Journey</h2>
+                <p>From vision to market leadership in data security</p>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item fade-in">
+                    <div class="timeline-content">
+                        <div class="timeline-title">The Beginning</div>
+                        <div class="timeline-description">Founded by cybersecurity experts who recognized the limitations of traditional DLP systems in handling modern threats like steganography and advanced phishing attacks.</div>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+                <div class="timeline-item fade-in">
+                    <div class="timeline-content">
+                        <div class="timeline-title">Breakthrough Innovation</div>
+                        <div class="timeline-description">Developed the first DLP system to successfully implement Microsoft SEAL homomorphic encryption, enabling privacy-preserving data analysis at scale.</div>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+                <div class="timeline-item fade-in">
+                    <div class="timeline-content">
+                        <div class="timeline-title">AI Integration</div>
+                        <div class="timeline-description">Integrated ALBERT neural networks achieving 95.78% accuracy in PII detection and deployed advanced CNN models for steganography detection.</div>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+                <div class="timeline-item fade-in">
+                    <div class="timeline-content">
+                        <div class="timeline-title">Market Leader</div>
+                        <div class="timeline-description">Achieved 99.6% threat detection accuracy and plan to secure partnerships with Fortune 500 companies across finance, healthcare, and government sectors.</div>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team-section">
+        <div class="section-header fade-in">
+            <h2>Leadership Team</h2>
+            <p>Meet the experts driving innovation in data security</p>
+        </div>
+        <div class="team-grid">
+            <div class="team-member fade-in">
+                <div class="team-avatar1"><img class="team-avatar" src="https://i.ibb.co/0R4SmksQ/sulaksha.png" alt="SP"></div>
+                <div class="team-name">Sulaksha Punsara</div>
+                <div class="team-role">CEO & Co-Founder</div>
+                <div class="team-bio">Former NSA cryptographer with 20+ years in cybersecurity. Pioneer in homomorphic encryption applications.</div>
+            </div>
+            <div class="team-member fade-in">
+                <div class="team-avatar1"><img class="team-avatar" src="https://i.ibb.co/xqbnjNBV/pubudu.png" alt="PL"></div>
+                <div class="team-name">Pubudu Liyanage</div>
+                <div class="team-role">CTO & Co-Founder</div>
+                <div class="team-bio">AI/ML expert from MIT. Led development of our proprietary steganography detection algorithms.</div>
+            </div>
+            <div class="team-member fade-in">
+                <div class="team-avatar1"><img class="team-avatar" src="https://i.ibb.co/NztJ0Bx/neelaka.png" alt="NN"></div>
+                <div class="team-name">Neelaka Nilakshana</div>
+                <div class="team-role">VP of Engineering</div>
+                <div class="team-bio">Former Google security architect. Specializes in large-scale distributed systems and real-time processing.</div>
+            </div>
+            <div class="team-member fade-in">
+                <div class="team-avatar1"><img class="team-avatar" src="https://i.ibb.co/gMWDyHZm/tharindu.png" alt="TG"></div>
+                <div class="team-name">Tharindu Gihan</div>
+                <div class="team-role">Head of AI Research</div>
+                <div class="team-bio">PhD in Computer Vision. Published researcher in neural network applications for cybersecurity.</div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- CTA Section -->
+    <section class="cta-section" id="contact">
+        <div class="cta-content fade-in">
+            <h2>Ready to Secure Your Data?</h2>
+            <p>Join leading organizations protecting their sensitive information with DATASHIELDX</p>
+            <div class="cta-buttons">
+                <a href="#" class="cta-button" onclick="showDemo()">Schedule Live Demo</a>
+                <a href="#" class="btn-secondary" onclick="downloadWhitepaper()">Download Whitepaper</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="#">Features</a></li>
+                    <li><a href="#">Pricing</a></li>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">API Reference</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Partners</a></li>
+                    <li><a href="#">Press</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Case Studies</a></li>
+                    <li><a href="#">Whitepapers</a></li>
+                    <li><a href="#">Webinars</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">System Status</a></li>
+                    <li><a href="#">Security</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 DATASHIELDX. All rights reserved. | Privacy Policy | Terms of Service</p>
+        </div>
+    </footer>
+
+    <script>
+        // Hide loader after page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+            }, 1000);
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Fade in animation on scroll
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Demo button action
+        function showDemo() {
+            alert('Thank you for your interest! Our sales team will contact you within 24 hours to schedule a personalized demo.');
+        }
+
+        // Download whitepaper
+        function downloadWhitepaper() {
+            // Replace FILE_ID with your actual Google Drive file ID
+            const fileId = 'YOUR_GOOGLE_DRIVE_FILE_ID';
+            const downloadUrl = `https://drive.google.com/uc?export=download&id=1IvPRGOrfhr_2GEMD1quvRt-RPjgmmE-h`;
+            
+            // Method 1: Direct download (opens in new tab)
+            window.open(downloadUrl, '_blank');
+            
+            // Method 2: Force download with invisible link
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.download = 'DATASHIELDX-Whitepaper.pdf';
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Optional: Track download analytics
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'download', {
+                    'event_category': 'whitepaper',
+                    'event_label': 'DATASHIELDX Technical Whitepaper'
+                });
+            }
+            
+            // Show success message
+            alert('Thank you for downloading our whitepaper! The download should begin shortly.');
+        }
+
+        // Alternative: Lead capture form before download
+        function downloadWhitepaperWithForm() {
+            // Create a modal with a form
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10000;
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: #1A1F2E; padding: 2rem; border-radius: 20px; width: 90%; max-width: 500px; border: 1px solid rgba(233, 30, 99, 0.3);">
+                    <h3 style="color: #E1E8ED; margin-bottom: 1rem;">Download Technical Whitepaper</h3>
+                    <p style="color: #8899A6; margin-bottom: 1.5rem;">Please provide your details to download our comprehensive whitepaper.</p>
+                    <form id="whitepaperForm">
+                        <input type="text" placeholder="Full Name" required style="width: 100%; padding: 0.75rem; margin-bottom: 1rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #E1E8ED;">
+                        <input type="email" placeholder="Work Email" required style="width: 100%; padding: 0.75rem; margin-bottom: 1rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #E1E8ED;">
+                        <input type="text" placeholder="Company" required style="width: 100%; padding: 0.75rem; margin-bottom: 1rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #E1E8ED;">
+                        <select style="width: 100%; padding: 0.75rem; margin-bottom: 1.5rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #E1E8ED;">
+                            <option value="">Select Industry</option>
+                            <option value="finance">Financial Services</option>
+                            <option value="healthcare">Healthcare</option>
+                            <option value="tech">Technology</option>
+                            <option value="government">Government</option>
+                            <option value="legal">Legal</option>
+                            <option value="education">Education</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <button type="submit" style="width: 100%; padding: 0.75rem; background: linear-gradient(135deg, #E91E63, #C2185B); color: white; border: none; border-radius: 50px; font-weight: 600; cursor: pointer;">Download Whitepaper</button>
+                    </form>
+                    <button onclick="this.parentElement.parentElement.remove()" style="margin-top: 1rem; background: transparent; border: none; color: #8899A6; cursor: pointer;">Cancel</button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            document.getElementById('whitepaperForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Here you would normally send the form data to your server
+                // For now, we'll just download the whitepaper
+                
+                const fileId = 'YOUR_GOOGLE_DRIVE_FILE_ID';
+                const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+                
+                window.open(downloadUrl, '_blank');
+                modal.remove();
+                
+                alert('Thank you! Your download will begin shortly. Check your email for additional resources.');
+            });
+        }
+
+        // Add parallax effect to hero background
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.grid-bg');
+            if (parallax) {
+                parallax.style.transform = `translate(${scrolled * 0.1}px, ${scrolled * 0.1}px)`;
+            }
+        });
+
+        // Add typing effect to hero title (optional enhancement)
+        const heroTitle = document.querySelector('.hero h1');
+        const originalText = heroTitle.textContent;
+        heroTitle.textContent = '';
+        let i = 0;
+
+        function typeWriter() {
+            if (i < originalText.length) {
+                heroTitle.textContent += originalText.charAt(i);
+                i++;
+                setTimeout(typeWriter, 50);
+            }
+        }
+
+        // Start typing effect after loader hides
+        setTimeout(typeWriter, 1500);
+        // Pricing interactions
+        document.querySelectorAll('.pricing-cta').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const plan = this.closest('.pricing-card').querySelector('.pricing-title').textContent;
+                if (plan === 'Enterprise Plus') {
+                    alert('Our sales team will contact you within 24 hours to discuss your custom Enterprise Plus requirements.');
+                } else {
+                    alert(`Starting your 30-day free trial for the ${plan} plan. You'll be redirected to the signup page.`);
+                }
+            });
+        });
+
+        // Add hover effect to comparison table rows
+        const comparisonRows = document.querySelectorAll('.comparison-table tbody tr');
+        comparisonRows.forEach(row => {
+            row.addEventListener('mouseenter', function() {
+                this.style.background = 'rgba(233, 30, 99, 0.05)';
+            });
+            row.addEventListener('mouseleave', function() {
+                this.style.background = '';
+            });
+        });
+
+        // Animate pricing cards on scroll
+        const pricingCards = document.querySelectorAll('.pricing-card');
+        pricingCards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.2}s`;
+        });
+
+        // Timeline animation
+        const timelineItems = document.querySelectorAll('.timeline-item');
+        timelineItems.forEach((item, index) => {
+            item.style.animationDelay = `${index * 0.2}s`;
+        });
+    </script>
+</body>
+</html>
